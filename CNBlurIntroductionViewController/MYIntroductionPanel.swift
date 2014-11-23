@@ -132,6 +132,8 @@ public class MYIntroductionPanel : UIView {
         self.descriptionTextColor = UIColor.blackColor()
         
         self.separatorLineColor = UIColor(white: 0, alpha: 0.1)
+        
+        self.imageView.contentMode = UIViewContentMode.ScaleAspectFit
                 
         self.buildPanel()
         self.buildConstraints()
@@ -186,7 +188,7 @@ public class MYIntroductionPanel : UIView {
     public override func updateConstraints() {
         var constraints = [NSLayoutConstraint]()
 
-        var text = "V:|-topPadding-[headerView(sizeHeaderHeight)]-headerTitlePadding-[titleLabel]-separatorPadding-[separatorLine(1.0)]-separatorPadding-[descriptionLabel]-descriptionImagePadding-[imageView]->=0.0-|"
+        var text = "V:|-topPadding-[headerView(sizeHeaderHeight)]-headerTitlePadding-[titleLabel]-separatorPadding-[separatorLine(1.0)]-separatorPadding-[descriptionLabel]-[imageView(<=sizeImageVieMaxHeight)]"
         
 
         var views = ["headerView" : self.headerView,
@@ -194,6 +196,9 @@ public class MYIntroductionPanel : UIView {
             "separatorLine" : self.separatorLine,
             "descriptionLabel" : self.descriptionLabel,
             "imageView" : self.imageView]
+        
+        
+        var imageViewMaxHeight = self.frame.height - topPadding - self.headerView.frame.height - headerTitlePadding - self.titleLabel.frame.height - 2 * titleSeparatorPadding - self.descriptionLabel.frame.height - 150
         
         var metrics = ["topPadding" : self.topPadding,
             "leftRightMargins" : self.leftRightMargins,
@@ -204,6 +209,7 @@ public class MYIntroductionPanel : UIView {
             "sizeLabel" : self.frame.size.width - self.leftRightMargins,
             "sizeHeaderWidth" : self.headerView.frame.width,
             "sizeHeaderHeight" : self.headerView.frame.height,
+            "sizeImageVieMaxHeight" : imageViewMaxHeight,
             "sizeHeaderMax" : self.frame.size.width]
 
         NSLayoutConstraint.constraintsWithVisualFormat(text, options: nil, metrics: metrics, views: views).map{
@@ -221,6 +227,8 @@ public class MYIntroductionPanel : UIView {
         constraints.append(self.descriptionLabel.fixWidth(metrics["sizeLabel"]!))
         
         constraints.append(self.headerView.fixWidth(metrics["sizeHeaderWidth"]!))
+        
+        constraints.append(self.imageView.fixWidth(metrics["sizeLabel"]!))
 
         NSLayoutConstraint.constraintsWithVisualFormat("|-[separatorLine]-|", options: nil, metrics: metrics, views: views).map{
             constraints.append($0 as NSLayoutConstraint)
