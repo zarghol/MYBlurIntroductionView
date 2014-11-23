@@ -12,12 +12,14 @@ let notificationSkipPushed = "notificationSkipPushed"
 
 class CNIntroductionViewController: UIViewController {
     var data: CNIntroData?
+    var introductionPanelNibName: String?
     
-    var panelView: MYIntroductionPanel!
+    private var panelView: MYIntroductionPanel!
     
     override func loadView() {
         super.loadView()
-        self.panelView = MYIntroductionPanel(frame: self.view.frame, data: self.data!)
+        self.panelView = self.data != nil ? MYIntroductionPanel(frame: self.view.frame, data: self.data!) : MYIntroductionPanel.loadWithNib(self.view.frame, nibNamed: introductionPanelNibName!)
         self.view.addSubview(self.panelView)
     }
+
 }

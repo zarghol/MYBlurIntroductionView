@@ -36,9 +36,10 @@ public class CNBlurIntroductionViewController: UIPageViewController, UIPageViewC
             self.view.insertSubview(imageView, atIndex: 0)
             
             if self.withBlur {
-                var blurView = UIView(frame: self.view.frame)
-                blurView.backgroundColor = UIColor(white: 1.0, alpha: 0.7)
-                self.view.insertSubview(blurView, atIndex: 1)
+                var visualEffect = UIBlurEffect(style: UIBlurEffectStyle.Light)
+                var visualEffectView = UIVisualEffectView(effect: visualEffect)
+                visualEffectView.frame = self.view.frame
+                self.view.insertSubview(visualEffectView, atIndex: 1)
             }
         }
         
@@ -46,7 +47,6 @@ public class CNBlurIntroductionViewController: UIPageViewController, UIPageViewC
         self.boutonSkip = UIButton()
         self.boutonSkip.setTitle("Skip", forState: .Normal)
         self.boutonSkip.titleLabel?.font = UIFont.systemFontOfSize(25.0)
-        self.boutonSkip.setTitleColor(UIColor.blueColor(), forState: .Normal)
         self.boutonSkip.sizeToFit()
         var boutonFrame = self.boutonSkip.frame
         
@@ -54,6 +54,7 @@ public class CNBlurIntroductionViewController: UIPageViewController, UIPageViewC
         boutonFrame.origin.y = self.view.frame.size.height - boutonFrame.size.height - 40.0
         
         self.boutonSkip.frame = boutonFrame
+        
         self.view.addSubview(self.boutonSkip)
         self.boutonSkip.addTarget(self, action: "skipPressed", forControlEvents: UIControlEvents.TouchUpInside)
     }

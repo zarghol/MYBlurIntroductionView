@@ -114,9 +114,12 @@ public class MYIntroductionPanel : UIView {
         
         self.titleLabel = UILabel()
         self.titleLabel.text = data.title
+        self.titleLabel.numberOfLines = 0
+
         
         self.descriptionLabel = UILabel()
         self.descriptionLabel.text = data.description
+        self.descriptionLabel.numberOfLines = 0
         
         self.separatorLine = UIView()
         
@@ -152,11 +155,9 @@ public class MYIntroductionPanel : UIView {
         
         self.separatorLineColor = UIColor(white: 0, alpha: 0.1)
         
-        
         self.buildPanel()
         self.buildConstraints()
     }
-
     
     class func loadWithNib(frame: CGRect, nibNamed nibName:String) -> MYIntroductionPanel! {
         
@@ -172,21 +173,10 @@ public class MYIntroductionPanel : UIView {
         }
 
         self.addSubview(self.headerView)
-        
-        self.titleLabel.numberOfLines = 0
-        
-        self.titleLabel.sizeToFit()
-        
         self.addSubview(self.titleLabel)
         self.addSubview(self.separatorLine)
-        
-        self.descriptionLabel.numberOfLines = 0
-        
-        self.descriptionLabel.sizeToFit()
-        
         self.addSubview(self.descriptionLabel)
         self.addSubview(self.imageView)
-        
     }
     
     func buildConstraints() {
@@ -196,7 +186,7 @@ public class MYIntroductionPanel : UIView {
     public override func updateConstraints() {
         var constraints = [NSLayoutConstraint]()
 
-        var text = "V:|-topPadding-[headerView]-headerTitlePadding-[titleLabel]-separatorPadding-[separatorLine(1.0)]-separatorPadding-[descriptionLabel]-descriptionImagePadding-[imageView]->=0.0-|"
+        var text = "V:|-topPadding-[headerView(sizeHeaderHeight)]-headerTitlePadding-[titleLabel]-separatorPadding-[separatorLine(1.0)]-separatorPadding-[descriptionLabel]-descriptionImagePadding-[imageView]->=0.0-|"
         
 
         var views = ["headerView" : self.headerView,
@@ -210,7 +200,11 @@ public class MYIntroductionPanel : UIView {
             "bottomPadding" : self.bottomPadding,
             "headerTitlePadding" : self.headerTitlePadding,
             "separatorPadding" : self.titleSeparatorPadding,
-            "descriptionImagePadding" : self.descriptionImagePadding]
+            "descriptionImagePadding" : self.descriptionImagePadding,
+            "sizeLabel" : self.frame.size.width - self.leftRightMargins,
+            "sizeHeaderWidth" : self.headerView.frame.width,
+            "sizeHeaderHeight" : self.headerView.frame.height,
+            "sizeHeaderMax" : self.frame.size.width]
 
         NSLayoutConstraint.constraintsWithVisualFormat(text, options: nil, metrics: metrics, views: views).map{
             constraints.append($0 as NSLayoutConstraint)
@@ -220,14 +214,19 @@ public class MYIntroductionPanel : UIView {
         constraints.append(self.centerInSelf(self.imageView))
 
         constraints.append(self.pinToLeadingSpace(self.titleLabel))
+        constraints.append(self.titleLabel.fixWidth(metrics["sizeLabel"]!))
+
+        
         constraints.append(self.pinToLeadingSpace(self.descriptionLabel))
+        constraints.append(self.descriptionLabel.fixWidth(metrics["sizeLabel"]!))
+        
+        constraints.append(self.headerView.fixWidth(metrics["sizeHeaderWidth"]!))
 
-        var textSeparatorLine = "|-[separatorLine]-|"
-
-        NSLayoutConstraint.constraintsWithVisualFormat(textSeparatorLine, options: nil, metrics: nil, views: views).map{
+        NSLayoutConstraint.constraintsWithVisualFormat("|-[separatorLine]-|", options: nil, metrics: metrics, views: views).map{
             constraints.append($0 as NSLayoutConstraint)
         }
         
+        self.removeConstraints(constraints)
         self.addConstraints(constraints)
 
         super.updateConstraints()
@@ -240,4 +239,6 @@ public class MYIntroductionPanel : UIView {
     override public class func requiresConstraintBasedLayout() -> Bool {
         return true
     }
+    
+    
 }

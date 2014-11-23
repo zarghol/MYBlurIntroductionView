@@ -155,11 +155,9 @@ public class MYIntroductionPanel : UIView {
         
         self.separatorLineColor = UIColor(white: 0, alpha: 0.1)
         
-        
         self.buildPanel()
         self.buildConstraints()
     }
-
     
     class func loadWithNib(frame: CGRect, nibNamed nibName:String) -> MYIntroductionPanel! {
         
@@ -179,7 +177,6 @@ public class MYIntroductionPanel : UIView {
         self.addSubview(self.separatorLine)
         self.addSubview(self.descriptionLabel)
         self.addSubview(self.imageView)
-        
     }
     
     func buildConstraints() {
@@ -216,27 +213,16 @@ public class MYIntroductionPanel : UIView {
         constraints.append(self.centerInSelf(self.headerView))
         constraints.append(self.centerInSelf(self.imageView))
 
-//        constraints.append(self.pinToLeadingSpace(self.titleLabel))
-//        constraints.append(self.pinToLeadingSpace(self.descriptionLabel))
-//        
-//        constraints.append(self.pinToTrailingSpace(self.titleLabel))
-//        constraints.append(self.pinToTrailingSpace(self.descriptionLabel))
+        constraints.append(self.pinToLeadingSpace(self.titleLabel))
+        constraints.append(self.titleLabel.fixWidth(metrics["sizeLabel"]!))
 
-        var textSeparatorLine = "|-[separatorLine]-|"
+        
+        constraints.append(self.pinToLeadingSpace(self.descriptionLabel))
+        constraints.append(self.descriptionLabel.fixWidth(metrics["sizeLabel"]!))
+        
+        constraints.append(self.headerView.fixWidth(metrics["sizeHeaderWidth"]!))
 
-        NSLayoutConstraint.constraintsWithVisualFormat(textSeparatorLine, options: nil, metrics: nil, views: views).map{
-            constraints.append($0 as NSLayoutConstraint)
-        }
-        
-        NSLayoutConstraint.constraintsWithVisualFormat("|-[headerView(sizeHeaderWidth)]-|", options: nil, metrics: metrics, views: views).map{
-            constraints.append($0 as NSLayoutConstraint)
-        }
-        
-        NSLayoutConstraint.constraintsWithVisualFormat("|-leftRightMargins-[titleLabel(sizeLabel)]-leftRightMargins-|", options: nil, metrics: metrics, views: views).map{
-            constraints.append($0 as NSLayoutConstraint)
-        }
-        
-        NSLayoutConstraint.constraintsWithVisualFormat("|-leftRightMargins-[descriptionLabel(sizeLabel)]-leftRightMargins-|", options: nil, metrics: metrics, views: views).map{
+        NSLayoutConstraint.constraintsWithVisualFormat("|-[separatorLine]-|", options: nil, metrics: metrics, views: views).map{
             constraints.append($0 as NSLayoutConstraint)
         }
         
@@ -253,4 +239,6 @@ public class MYIntroductionPanel : UIView {
     override public class func requiresConstraintBasedLayout() -> Bool {
         return true
     }
+    
+    
 }

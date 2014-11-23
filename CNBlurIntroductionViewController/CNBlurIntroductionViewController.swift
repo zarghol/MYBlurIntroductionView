@@ -21,12 +21,13 @@ public class CNBlurIntroductionViewController: UIPageViewController, UIPageViewC
     public var panelsData = [CNIntroData]()
     
     public var backgroundImage: UIImage?
+    public var withBlur: Bool = true
     public var langageDirection: CNLanguageDirection = .LeftToRight
     public var skipButtonPadding: CGFloat = 10.0
     
     override public func loadView() {
         super.loadView()
-        
+                
         // if there is a backgroundImage
         if let backgroundImage = self.backgroundImage {
             // add the backgroundImage AND a blurView
@@ -34,16 +35,18 @@ public class CNBlurIntroductionViewController: UIPageViewController, UIPageViewC
             imageView.image = self.backgroundImage
             self.view.insertSubview(imageView, atIndex: 0)
             
-            var blurView = UIView(frame: self.view.frame)
-            blurView.backgroundColor = UIColor(white: 1.0, alpha: 0.7)
-            self.view.insertSubview(blurView, atIndex: 1)
+            if self.withBlur {
+                var visualEffect = UIBlurEffect(style: UIBlurEffectStyle.Light)
+                var visualEffectView = UIVisualEffectView(effect: visualEffect)
+                visualEffectView.frame = self.view.frame
+                self.view.insertSubview(visualEffectView, atIndex: 1)
+            }
         }
         
         // add the skipButton
         self.boutonSkip = UIButton()
         self.boutonSkip.setTitle("Skip", forState: .Normal)
         self.boutonSkip.titleLabel?.font = UIFont.systemFontOfSize(25.0)
-        self.boutonSkip.setTitleColor(UIColor.blueColor(), forState: .Normal)
         self.boutonSkip.sizeToFit()
         var boutonFrame = self.boutonSkip.frame
         
@@ -51,6 +54,7 @@ public class CNBlurIntroductionViewController: UIPageViewController, UIPageViewC
         boutonFrame.origin.y = self.view.frame.size.height - boutonFrame.size.height - 40.0
         
         self.boutonSkip.frame = boutonFrame
+        
         self.view.addSubview(self.boutonSkip)
         self.boutonSkip.addTarget(self, action: "skipPressed", forControlEvents: UIControlEvents.TouchUpInside)
     }
@@ -58,18 +62,15 @@ public class CNBlurIntroductionViewController: UIPageViewController, UIPageViewC
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        if self.panelsData.count == 0 {
-            self.panelsData.append(CNIntroData(title: "Premiere Page", description: "description 1", image: UIImage(named: "unite")!))
-            self.panelsData.append(CNIntroData(title: "Deuxieme Page", description: "description 2", image: UIImage(named: "unite")!))
-            self.panelsData.append(CNIntroData(title: "Troisieme Page", description: "description 3", image: UIImage(named: "unite")!))
-        }
-        
         self.dataSource = self
         
-        let beginningIndex = self.langageDirection == .LeftToRight ? 0 : self.panelsData.count - 1
-        
-        self.setViewControllers([self.viewControllerAtIndex(beginningIndex)], direction:.Forward, animated: true, completion: nil)
-
+        if self.panelsData.count == 0 {
+            println("0 panels found. please set the panelsData property.")
+        } else {
+            let beginningIndex = self.langageDirection == .LeftToRight ? 0 : self.panelsData.count - 1
+            
+            self.setViewControllers([self.viewControllerAtIndex(beginningIndex)], direction:.Forward, animated: true, completion: nil)
+        }
     }
     
     public func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {

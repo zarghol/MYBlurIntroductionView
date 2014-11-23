@@ -59,5 +59,25 @@ extension UIView {
             constant: 0.0)
     }
     
+    func fixWidth(width:CGFloat) -> NSLayoutConstraint {
+        return NSLayoutConstraint(item: self,
+            attribute: NSLayoutAttribute.Width,
+            relatedBy: NSLayoutRelation.Equal,
+            toItem: nil,
+            attribute: NSLayoutAttribute.NotAnAttribute,
+            multiplier: 1.0,
+            constant: width)
+    }
+    
+    func fixHeight(height:CGFloat) -> NSLayoutConstraint {
+        return NSLayoutConstraint(item: self,
+            attribute: NSLayoutAttribute.Height,
+            relatedBy: NSLayoutRelation.Equal,
+            toItem: nil,
+            attribute: NSLayoutAttribute.NotAnAttribute,
+            multiplier: 1.0,
+            constant: height)
+    }
+    
     
 }
